@@ -1,29 +1,30 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const session = require('express-session');
-const pool = require('./config/db'); // Conexão com o banco de dados
+const pool = require('./config/db');
 const app = express();
 
 // Configuração para usar o EJS e o express.static
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
-
-// Configuração de sessão
 app.use(session({
   secret: 'secreta',
   resave: false,
   saveUninitialized: false,
-  cookie: { secure: false }  // Defina como 'true' em produção com HTTPS
 }));
 
 // Rota Home
 app.get('/', (req, res) => {
+  // Se o usuário estiver logado (sessão válida), passamos as informações para o template
   if (req.session.user) {
-    return res.render('index', { user: req.session.user });  // Passa o usuário logado para o EJS
+      return res.render('index', { user: req.session.user });  // Passa os dados do usuário para o EJS
   }
-  res.render('index');  // Renderiza o arquivo 'index.ejs'
+  // Se o usuário não estiver logado, passa um objeto vazio (ou redireciona para a tela de login)
+  return res.render('index', { user: null });
 });
+
+
 
 // Rota de login
 app.post('/login', async (req, res) => {
@@ -44,7 +45,7 @@ app.post('/login', async (req, res) => {
         name: user.name,
         email: user.email
       };
-      return res.redirect('/');  // Redireciona para a página principal após login
+      return res.redirect('/');
     } else {
       return res.status(400).send('Senha incorreta');
     }
@@ -64,7 +65,7 @@ app.post('/register', async (req, res) => {
       'INSERT INTO users (name, email, password, city, phone) VALUES ($1, $2, $3, $4, $5)',
       [name, email, hashedPassword, city, phone]
     );
-    res.redirect('/');  // Redireciona para a página inicial após registro
+    res.redirect('/');
   } catch (error) {
     console.error(error);
     res.status(500).send('Erro ao registrar usuário');
@@ -77,7 +78,7 @@ app.post('/logout', (req, res) => {
     if (err) {
       return res.status(500).send('Erro ao deslogar');
     }
-    res.redirect('/');  // Redireciona para a página inicial após logout
+    res.redirect('/');
   });
 });
 
