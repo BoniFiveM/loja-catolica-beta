@@ -1,0 +1,31 @@
+{
+    "name": "loja-catolica",
+    "version": "1.0.0",
+    "description": "Loja online católica desenvolvida com EJS, Tailwind e Express.",
+    "main": "app.js",
+    "scripts": {
+        "start": "node app.js",
+        "dev": "nodemon app.js"
+    },
+    "keywords": [
+        "loja",
+        "católica",
+        "ejs",
+        "tailwind",
+        "express"
+    ],
+    "author": "MarcosDev001",
+    "license": "MIT",
+    "dependencies": {
+        "bcryptjs": "^2.4.3",
+        "dotenv": "^16.0.3",
+        "ejs": "^3.1.10",
+        "express": "^4.18.2",
+        "express-session": "^1.18.1",
+        "pg": "^8.13.1"
+    },
+    "devDependencies": {
+        "nodemon": "^3.0.0",
+        "tailwindcss": "^3.4.0"
+    }
+}
