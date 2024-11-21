@@ -16,11 +16,9 @@ app.use(session({
 
 // Rota Home
 app.get('/', (req, res) => {
-  // Se o usuário estiver logado (sessão válida), passamos as informações para o template
   if (req.session.user) {
-      return res.render('index', { user: req.session.user });  // Passa os dados do usuário para o EJS
+    return res.render('index', { user: req.session.user });
   }
-  // Se o usuário não estiver logado, passa um objeto vazio (ou redireciona para a tela de login)
   return res.render('index', { user: null });
 });
 
