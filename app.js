@@ -14,14 +14,15 @@ app.use(session({
   secret: 'secreta',
   resave: false,
   saveUninitialized: false,
+  cookie: { secure: false }  // Defina como 'true' em produção com HTTPS
 }));
 
 // Rota Home
 app.get('/', (req, res) => {
   if (req.session.user) {
-    return res.render('index', { user: req.session.user });
+    return res.render('index', { user: req.session.user });  // Passa o usuário logado para o EJS
   }
-  return res.render('index', { user: null });
+  res.render('index');  // Renderiza o arquivo 'index.ejs'
 });
 
 // Rota de login
@@ -43,7 +44,7 @@ app.post('/login', async (req, res) => {
         name: user.name,
         email: user.email
       };
-      return res.redirect('/');
+      return res.redirect('/');  // Redireciona para a página principal após login
     } else {
       return res.status(400).send('Senha incorreta');
     }
@@ -63,7 +64,7 @@ app.post('/register', async (req, res) => {
       'INSERT INTO users (name, email, password, city, phone) VALUES ($1, $2, $3, $4, $5)',
       [name, email, hashedPassword, city, phone]
     );
-    res.redirect('/');
+    res.redirect('/');  // Redireciona para a página inicial após registro
   } catch (error) {
     console.error(error);
     res.status(500).send('Erro ao registrar usuário');
@@ -76,7 +77,7 @@ app.post('/logout', (req, res) => {
     if (err) {
       return res.status(500).send('Erro ao deslogar');
     }
-    res.redirect('/');
+    res.redirect('/');  // Redireciona para a página inicial após logout
   });
 });
 
