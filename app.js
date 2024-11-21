@@ -1,13 +1,15 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const session = require('express-session');
-const pool = require('./config/db');
+const pool = require('./config/db'); // Conexão com o banco de dados
 const app = express();
 
 // Configuração para usar o EJS e o express.static
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
+
+// Configuração de sessão
 app.use(session({
   secret: 'secreta',
   resave: false,
@@ -21,8 +23,6 @@ app.get('/', (req, res) => {
   }
   return res.render('index', { user: null });
 });
-
-
 
 // Rota de login
 app.post('/login', async (req, res) => {
