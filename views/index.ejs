@@ -27,29 +27,34 @@
 
             <!-- Links -->
             <div class="flex items-center space-x-6">
-                <% if (user) { %>
+                <% if (user) { %> <!-- Verifica se o usuário está logado -->
                     <span>Bem-vindo, <strong><%= user.name %></strong></span>
                     <form action="/logout" method="POST">
                         <button type="submit" class="text-white hover:underline">Sair</button>
                     </form>
-                <% } else { %>
+                <% } else { %> <!-- Se não estiver logado -->
                     <a href="#" id="open-login-modal" class="hover:underline flex items-center space-x-2">
                         <i class="fas fa-user text-xl"></i>
                         <span>Entrar ou Cadastrar</span>
                     </a>
                 <% } %>
+                
+                
                 <a href="#" class="hover:underline flex items-center space-x-2">
                     <i class="fas fa-heart text-xl"></i>
                     <span>Favoritos</span>
                 </a>
+            
                 <div class="relative">
-                    <a href="#" class="text-2xl"><i class="fas fa-shopping-cart"></i></a>
-                    <span class="absolute -top-2 -right-2 bg-red-600 text-white text-xs px-1 rounded-full flex items-center justify-center">
-                        3
+                    <a href="/cart/view" class="text-2xl">
+                        <i class="fas fa-shopping-cart"></i>
+                    </a>
+                    <span id="cart-count" class="absolute -top-2 -right-2 bg-red-600 text-white text-xs px-1 rounded-full flex items-center justify-center">
+                        0
                     </span>
                 </div>
             </div>
-        </div>
+            
     </header>
 
     <!-- Menu de navegação (Home, Produtos, etc) -->
@@ -139,78 +144,81 @@
 <button id="open-sidebar" class="fixed top-4 left-4 bg-blue-600 text-white p-3 rounded-full shadow-md hover:bg-blue-700 transition">
     <i class="fas fa-bars text-xl"></i>
 </button>
-<!-- Produtos -->
+
 <section class="py-12 bg-gray-50">
     <div class="container mx-auto">
         <h2 class="text-3xl font-extrabold text-center text-blue-600 mb-10 relative">
             <span class="absolute inset-0 bg-gradient-to-r from-blue-400 to-blue-600 text-transparent bg-clip-text">Destaques</span>
             <span class="relative text-white">Destaques</span>
         </h2>
-        
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-            <!-- Produto 1 -->
-            <div class="bg-white border border-gray-200 rounded-lg shadow-md hover:shadow-lg transition duration-200 product" 
-                 data-size="M" data-price="27.90">
-                <img src="produto1.jpg" alt="Produto 1" class="w-full h-48 object-cover rounded-t-lg">
-                <div class="p-4">
-                    <h3 class="font-semibold text-lg mb-2 text-gray-800">Mini Capela</h3>
-                    <p class="text-sm text-gray-500 line-through">R$ 29,90</p>
-                    <p class="text-lg text-blue-600 font-bold">R$ 27,90 no pix</p>
-                    <button class="mt-4 w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition flex items-center justify-center space-x-2">
-                        <i class="fas fa-cart-plus"></i>
-                        <span>Comprar</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Produto 2 -->
-            <div class="bg-white border border-gray-200 rounded-lg shadow-md hover:shadow-lg transition duration-200 product" 
-                 data-size="G" data-price="6.78">
-                <img src="https://static.lvartigosreligiosos.com.br/public/liriodovale/imagens/produtos/thumbs/mini-capela-de-nossa-senhora-da-imaculada-conceicao-em-mdf-marrom-escuro-66e1bccbcd986.png"
-                    alt="Produto 2" class="w-full h-48 object-cover rounded-t-lg">
-                <div class="p-4">
-                    <h3 class="font-semibold text-lg mb-2 text-gray-800">Chaveiro de Nossa Senhora</h3>
-                    <p class="text-sm text-gray-500 line-through">R$ 6,99</p>
-                    <p class="text-lg text-blue-600 font-bold">R$ 6,78 no pix</p>
-                    <button class="mt-4 w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition flex items-center justify-center space-x-2">
-                        <i class="fas fa-cart-plus"></i>
-                        <span>Comprar</span>
-                    </button>
-                </div>
-            </div>
-            
-            <!-- Produto 3 -->
-            <div class="bg-white border border-gray-200 rounded-lg shadow-md hover:shadow-lg transition duration-200 product" 
-                 data-size="P" data-price="15.90">
-                <img src="produto3.jpg" alt="Produto 3" class="w-full h-48 object-cover rounded-t-lg">
-                <div class="p-4">
-                    <h3 class="font-semibold text-lg mb-2 text-gray-800">Camiseta Religiosa</h3>
-                    <p class="text-sm text-gray-500 line-through">R$ 19,90</p>
-                    <p class="text-lg text-blue-600 font-bold">R$ 15,90 no pix</p>
-                    <button class="mt-4 w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition flex items-center justify-center space-x-2">
-                        <i class="fas fa-cart-plus"></i>
-                        <span>Comprar</span>
-                    </button>
-                </div>
-            </div>
-            
-            <!-- Produto 4 -->
-            <div class="bg-white border border-gray-200 rounded-lg shadow-md hover:shadow-lg transition duration-200 product" 
-                 data-size="M" data-price="22.90">
-                <img src="produto4.jpg" alt="Produto 4" class="w-full h-48 object-cover rounded-t-lg">
-                <div class="p-4">
-                    <h3 class="font-semibold text-lg mb-2 text-gray-800">Bíblia Infantil</h3>
-                    <p class="text-sm text-gray-500 line-through">R$ 25,90</p>
-                    <p class="text-lg text-blue-600 font-bold">R$ 22,90 no pix</p>
-                    <button class="mt-4 w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition flex items-center justify-center space-x-2">
-                        <i class="fas fa-cart-plus"></i>
-                        <span>Comprar</span>
-                    </button>
-                </div>
-            </div>
+            <% if (produtos && produtos.length > 0) { %> <!-- Verificando se produtos está definido -->
+                <% produtos.forEach(function(product) { %> <!-- Iterando sobre produtos -->
+                    <div class="bg-white border border-gray-200 rounded-lg shadow-md hover:shadow-lg transition duration-200 product" 
+                        data-id="<%= product.id %>" 
+                        data-name="<%= product.name %>" 
+                        data-price="<%= product.price %>" 
+                        data-image="<%= product.image_url %>">
+                        <!-- Link para a página de detalhes do produto -->
+                        <a href="/produto/<%= product.id %>">
+                            <img src="<%= product.image %>" alt="<%= product.name %>" class="w-full h-64 object-contain rounded-lg">
+                        </a>
+                        
+                        <div class="p-4">
+                            <!-- Nome do produto -->
+                            <h3 class="font-semibold text-lg mb-2 text-gray-800"><%= product.name %></h3>
+                            <!-- Preço antigo com riscado -->
+                            <p class="text-sm text-gray-500 line-through">R$ <%= product.price %></p>
+                            <!-- Preço atual no pix -->
+                            <p class="text-lg text-blue-600 font-bold">R$ <%= product.price %> no pix</p>
+                            <!-- Quantidade do produto -->
+                            <div class="flex items-center space-x-2 my-2">
+                                <label for="quantity" class="text-sm text-gray-600">Qtd:</label>
+                                <input type="number" class="product-quantity border border-gray-300 rounded-md px-2 w-16" min="1" value="1">
+                            </div>
+                            <!-- Botão para adicionar ao carrinho se estiver logado -->
+                            <% if (user) { %>
+                                <button class="add-to-cart mt-4 w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition flex items-center justify-center space-x-2">
+                                    <i class="fas fa-cart-plus"></i>
+                                    <span>Comprar</span>
+                                </button>
+                            <% } else { %>
+                                <!-- Botão desabilitado se o usuário não estiver logado -->
+                                <button disabled class="mt-4 w-full bg-gray-400 text-white py-2 rounded-md">
+                                    Você precisa estar logado para comprar
+                                </button>
+                            <% } %>
+                        </div>
+                    </div>
+                <% }) %>
+            <% } else { %>
+                <!-- Mensagem se não houver produtos -->
+                <p>Nenhum produto disponível no momento.</p>
+            <% } %>
         </div>
+        
     </div>
 </section>
+
+
+
+
+
+<!-- Modal do Carrinho -->
+<div id="cart-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+    <div class="bg-white w-96 p-6 rounded-lg">
+        <h2 class="text-xl font-bold mb-4">Carrinho de Compras</h2>
+        <ul id="cart-items" class="space-y-2">
+            <!-- Os itens adicionados serão exibidos aqui dinamicamente -->
+        </ul>
+        <button id="close-cart" class="mt-4 bg-red-600 text-white px-4 py-2 rounded-md">Fechar</button>
+    </div>
+</div>
+            
+
+
+</section>
+
 
     <!-- Footer -->
     <footer class="bg-blue-700 text-white py-8">
@@ -367,7 +375,11 @@
     filterRadios.forEach(radio => radio.addEventListener('change', applyFilters));
 });
 
+
+
+
     </script>
+    <script src="/js/script.js"></script>
 </body>
 
 </html>

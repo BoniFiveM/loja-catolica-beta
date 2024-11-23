@@ -21,7 +21,10 @@ const query = (text, params) => {
       return res;
     })
     .catch(err => {
-      console.error('Erro ao realizar consulta:', err); // Exibe erro, se ocorrer
+      console.error('Erro ao realizar consulta:', err.message); // Exibe mais informações sobre o erro
+      if (err.table) {
+        console.error('Tabela:', err.table); // Caso o erro esteja relacionado à tabela
+      }
       throw err;
     });
 };
