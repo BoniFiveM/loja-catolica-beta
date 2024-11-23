@@ -171,29 +171,53 @@ app.get('/products', async (req, res) => {
   }
 });
 
-// Rota para exibir os detalhes do produto
-app.get('/produtoView/:id', async (req, res) => {
+
+
+app.get('/produto/:id', async (req, res) => {
   try {
     const productId = req.params.id;
-    const user = req.session.user || null; // Acessando o usuário da sessão (ajuste conforme sua lógica de autenticação)
 
-    // Consulta ao banco para pegar os detalhes do produto específico
     const productResult = await pool.query('SELECT * FROM products WHERE id = $1', [productId]);
 
-    // Se o produto não for encontrado, retornar um erro
     if (productResult.rows.length === 0) {
       return res.status(404).send('Produto não encontrado');
     }
 
     const product = productResult.rows[0];
+    const user = req.session.user || null;
 
-    // Passando os detalhes do produto e a variável 'user' para a view
     res.render('produtoView', { product: product, user: user });
   } catch (err) {
     console.error('Erro ao consultar produto:', err);
     res.status(500).send('Erro ao buscar produto');
   }
 });
+
+// Rota para exibir os detalhes do produto
+// Rota para exibir os detalhes do produto
+app.get('/produtoView/:id', async (req, res) => {
+  try {
+    const productId = req.params.id; // Obter o ID do produto da URL.
+
+    // Consulta ao banco para buscar o produto com o ID correto.
+    const result = await pool.query('SELECT * FROM products WHERE id = $1', [productId]);
+
+    if (result.rows.length === 0) {
+      return res.status(404).send('Produto não encontrado.');
+    }
+
+    const product = result.rows[0];
+    const user = req.session.user || null;
+
+    res.render('produtoView', { product, user });
+  } catch (error) {
+    console.error('Erro ao buscar produto:', error);
+    res.status(500).send('Erro ao buscar produto.');
+  }
+});
+
+
+
 
 
 // Rota para o painel administrativo

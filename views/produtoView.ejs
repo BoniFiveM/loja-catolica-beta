@@ -1,3 +1,4 @@
+<!--produtoView-->
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -5,53 +6,132 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chaveiro da Sagrada Família de Nazaré em Metal com Mosquete - Resinado</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.3/dist/tailwind.min.css" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
-<body class="bg-gray-100 flex justify-center items-center min-h-screen">
+<body class="bg-gray-50 font-sans">
 
-<!-- Produto View -->
-<div class="bg-white p-8 rounded-lg shadow-md w-full max-w-4xl">
+<!-- Header -->
+<header class="bg-blue-600 text-white shadow-md">
+    <div class="container mx-auto flex justify-between items-center py-4 px-6">
+        <!-- Logo -->
+        <img src="logo.png" alt="Logo" class="h-12">
 
-    <!-- Imagem do Produto -->
-    <div class="flex justify-center items-center mb-6 md:mb-0">
-        <img src="" alt="Chaveiro da Sagrada Família de Nazaré em Metal com Mosquete - Resinado" class="w-full h-64 object-contain rounded-lg">
-    </div>
-
-    <!-- Informações do Produto -->
-    <div class="pl-8">
-        <!-- Nome do Produto -->
-        <h2 class="text-3xl font-bold text-gray-800 mb-4">Chaveiro da Sagrada Família de Nazaré em Metal com Mosquete - Resinado</h2>
-
-        <!-- Preço -->
-        <p class="text-2xl text-blue-600 font-bold mb-4">R$ 19.99</p>
-
-        <!-- Descrição do Produto -->
-        <h3 class="text-lg font-semibold text-gray-800 mt-4">Descrição do Produto</h3>
-        <p class="text-sm text-gray-600 mb-6">d</p>
-
-        <!-- Adicionar ao Carrinho -->
-        <button disabled class="bg-gray-400 text-white py-2 px-4 rounded-md">
-            Você precisa estar logado para comprar
-        </button>
-
-        <!-- Formas de Pagamento -->
-        <div class="my-4">
-            <p class="text-sm text-gray-600">1x de R$ 19.99 no cartão de crédito</p>
-            <p class="text-sm text-gray-600">R$ à vista no Pix ou Boleto</p>
+        <!-- Barra de busca centralizada -->
+        <div class="relative flex-1 max-w-xl mx-auto">
+            <input type="text" placeholder="Digite aqui sua busca..."
+                class="w-full py-3 px-6 text-gray-800 rounded-full border focus:ring-2 focus:ring-blue-400 outline-none text-lg">
+            <i class="fas fa-search absolute right-5 top-3 text-blue-600"></i>
         </div>
 
-        <!-- Botão de WhatsApp -->
-        <a href="https://wa.me/1234567890" class="bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 mt-4 block text-center">
-            Compre Pelo WhatsApp
-        </a>
+        <!-- Links -->
+        <div class="flex items-center space-x-6">
+            <% if (user) { %> <!-- Verifica se o usuário está logado -->
+                <span>Bem-vindo, <strong><%= user.name %></strong></span>
+                <form action="/logout" method="POST">
+                    <button type="submit" class="text-white hover:underline">Sair</button>
+                </form>
+            <% } else { %> <!-- Se não estiver logado -->
+                <a href="#" id="open-login-modal" class="hover:underline flex items-center space-x-2">
+                    <i class="fas fa-user text-xl"></i>
+                    <span>Entrar ou Cadastrar</span>
+                </a>
+            <% } %>
+            <a href="#" class="hover:underline flex items-center space-x-2">
+                <i class="fas fa-heart text-xl"></i>
+                <span>Favoritos</span>
+            </a>
+            <div class="relative">
+                <a href="/cart/view" class="text-2xl">
+                    <i class="fas fa-shopping-cart"></i>
+                </a>
+                <span id="cart-count" class="absolute -top-2 -right-2 bg-red-600 text-white text-xs px-1 rounded-full flex items-center justify-center">
+                    0
+                </span>
+            </div>
+        </div>
+    </div>
+</header>
 
-        <!-- Calcular Frete -->
-        <div class="mt-4 flex items-center space-x-4">
-            <input type="text" placeholder="Digite seu CEP" class="border border-gray-300 rounded-md px-4 py-2 w-40">
-            <button class="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700">Calcular Frete</button>
+<!-- Menu de navegação -->
+<nav class="bg-blue-700 text-white py-4">
+    <div class="container mx-auto flex justify-center space-x-8">
+        <a href="#home" class="hover:text-blue-300">Home</a>
+        <a href="#produtos" class="hover:text-blue-300">Imagens</a>
+        <a href="#sobre" class="hover:text-blue-300">Camisetas</a>
+        <a href="#acessorios" class="hover:text-blue-300">Acessórios</a>
+        <a href="#canecas" class="hover:text-blue-300">Canecas</a>
+        <a href="#liturgias" class="hover:text-blue-300">Liturgias</a>
+    </div>
+</nav>
+
+<div class="bg-white w-full py-8 md:py-16">
+    <div class="container mx-auto flex flex-col md:flex-row items-center justify-center md:justify-between max-w-6xl space-y-8 md:space-y-0">
+
+        <!-- Imagem do Produto -->
+        <div class="w-full md:w-1/2 flex justify-center items-center">
+            <img src="<%= product.image_url || 'https://via.placeholder.com/600' %>" alt="<%= product.name %>" class="w-full h-auto object-contain rounded-lg shadow-lg">
+        </div>
+
+        <!-- Informações do Produto -->
+        <div class="w-full md:w-1/2 flex flex-col items-center md:items-start justify-center md:pl-12 space-y-6">
+            <h2 class="text-3xl md:text-4xl font-extrabold text-gray-800 mb-4 text-center md:text-left"><%= product.name %></h2>
+            <p class="text-2xl md:text-3xl text-blue-600 font-semibold mb-4 text-center md:text-left">R$ <%= product.price %></p>
+            <h3 class="text-lg font-semibold text-gray-700">Descrição do Produto</h3>
+            <p class="text-base text-gray-600 mb-6 text-center md:text-left"><%= product.description %></p>
+
+            <% if (user) { %>
+            <!-- Formulário de Adicionar ao Carrinho -->
+            <form action="/cart/add" method="POST" class="w-full flex flex-col items-start space-y-2">
+                <input type="hidden" name="productId" value="<%= product.id %>">
+                <input type="hidden" name="productName" value="<%= product.name %>">
+                <input type="hidden" name="price" value="<%= product.price %>">
+                <input type="number" name="quantity" value="1" min="1" class="border rounded-md px-4 py-2 w-20 text-gray-700">
+                <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-md font-medium text-lg hover:bg-blue-700 transition duration-300">
+                    Adicionar ao Carrinho
+                </button>
+            </form>
+            <% } else { %>
+            <!-- Botão desabilitado -->
+            <button disabled class="w-full bg-gray-400 text-white py-3 rounded-md font-medium text-lg cursor-not-allowed">
+                Você precisa estar logado para comprar
+            </button>
+            <% } %>
         </div>
     </div>
 </div>
 
+<!-- Footer -->
+<footer class="bg-blue-700 text-white py-8">
+    <div class="container mx-auto">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center sm:text-left">
+            <div>
+                <h3 class="text-xl font-semibold mb-4">Sobre Nós</h3>
+                <p class="text-sm">Somos uma loja dedicada a oferecer produtos de alta qualidade para sua fé e espiritualidade. Nosso objetivo é servir com amor e dedicação.</p>
+            </div>
+            <div>
+                <h3 class="text-xl font-semibold mb-4">Endereço</h3>
+                <address class="not-italic text-sm">
+                    R. Alagoas, 3461 <br> Patrimônio Velho, Votuporanga - SP <br> CEP: 15502-240
+                </address>
+            </div>
+            <div>
+                <h3 class="text-xl font-semibold mb-4">Siga-nos</h3>
+                <div class="flex justify-center sm:justify-start space-x-4">
+                    <a href="#" class="text-white hover:text-blue-300 text-2xl"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="text-white hover:text-blue-300 text-2xl"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="text-white hover:text-blue-300 text-2xl"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="text-white hover:text-blue-300 text-2xl"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="mt-8 border-t border-blue-500 pt-4 text-center text-sm">
+            <p>&copy; 2024 Loja Católica. Todos os direitos reservados.</p>
+            <p class="mt-2">Desenvolvido com <i class="fas fa-heart text-red-500"></i> e fé.</p>
+        </div>
+    </div>
+</footer>
+<script src="/js/script.js"></script>
 </body>
 </html>
