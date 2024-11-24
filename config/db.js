@@ -2,37 +2,37 @@ const { Pool } = require('pg'); // Importa o Pool do pacote pg
 
 // Configuração do banco de dados
 const pool = new Pool({
-  user: 'boniarts',           // Substitua pelo seu usuário do PostgreSQL
-  host: 'localhost',          // Endereço do servidor do banco de dados (pode ser localhost ou IP)
-  database: 'boniarts',       // Nome do banco de dados
-  password: 'novaSenha',      // Senha do banco de dados
-  port: 5432,                 // Porta padrão do PostgreSQL
+  user: 'boniarts', // Nome de usuário
+  host: 'dpg-ct1923ggph6c73bgp7u0-a.oregon-postgres.render.com', // URL do banco externo
+  database: 'boniarts', // Nome do banco de dados
+  password: 'Z06f0sf4HCIxI4nHFehbb65W9lL1faIM', // Senha
+  port: 5432, // Porta padrão do PostgreSQL
+  ssl: { rejectUnauthorized: false }, // Necessário para conexões externas no Render
 });
 
-// Exibe a conexão
+// Testando a conexão
 console.log('Conectando ao banco de dados...');
+
+pool.connect()
+  .then(() => console.log('Conexão bem-sucedida ao banco de dados!'))
+  .catch(err => {
+    console.error('Erro ao conectar ao banco de dados:', err.message);
+    process.exit(1); // Sai do processo caso haja erro
+  });
 
 // Função para realizar uma consulta
 const query = (text, params) => {
-  console.log('Consultando:', text, 'com parâmetros:', params); // Exibe a consulta e os parâmetros
+  console.log('Executando consulta:', text);
   return pool.query(text, params)
     .then(res => {
-      console.log('Consulta realizada com sucesso:', res.rows); // Exibe o resultado da consulta
-      return res;
+      console.log('Consulta bem-sucedida:', res.rows);
+      return res.rows;
     })
     .catch(err => {
-      console.error('Erro ao realizar consulta:', err.message); // Exibe mais informações sobre o erro
-      if (err.table) {
-        console.error('Tabela:', err.table); // Caso o erro esteja relacionado à tabela
-      }
+      console.error('Erro ao executar consulta:', err.message);
       throw err;
     });
 };
 
-// Testando a conexão (verifica se a conexão foi bem-sucedida)
-pool.connect()
-  .then(() => console.log('Conexão bem-sucedida ao banco de dados'))
-  .catch(err => console.error('Erro ao conectar ao banco de dados', err));
-
-// Exportando a função de consulta
-module.exports = { query };
+// Exporta o pool e a função de consulta
+module.exports = { query, pool };
