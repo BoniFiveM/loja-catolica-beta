@@ -28,19 +28,16 @@ function ensureAuthenticated(req, res, next) {
 // Rota Home
 app.get('/', async (req, res) => {
   try {
-    // Consulta ao banco de dados para obter os produtos
-    const produtos = await pool.query('SELECT * FROM products');
-    
-    // Recuperando os dados do usuário da sessão (ou outro método de autenticação)
-    const user = req.session.user || null;  // Altere conforme sua lógica de autenticação
-
-    // Passando as variáveis 'produtos' e 'user' para a view
-    res.render('index', { produtos: produtos.rows, user: user });
+    // Consulta os produtos da tabela 'produtos' em vez de 'items'
+    const result = await pool.query('SELECT * FROM public.produtos');
+    const user = req.session.user || null;
+    res.render('index', { produtos: result.rows, user: user });
   } catch (err) {
     console.error('Erro ao consultar produtos:', err);
     res.status(500).send('Erro ao buscar produtos');
   }
 });
+
 
 
 // Rota de login
@@ -159,12 +156,13 @@ app.post('/purchase', ensureAuthenticated, async (req, res) => {
   }
 });
 // Rota para exibir os produtos na página principal
+// Rota para exibir os produtos na página principal
 app.get('/products', async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM products');
+    // Consulta os produtos da tabela 'produtos'
+    const result = await pool.query('SELECT * FROM produtos');
     const products = result.rows;
-    
-    res.render('index', { produtos: products }); // Passando a lista de produtos para a view
+    res.render('index', { produtos: products });
   } catch (error) {
     console.error('Erro ao carregar produtos:', error);
     res.status(500).send('Erro ao carregar produtos');
@@ -173,11 +171,12 @@ app.get('/products', async (req, res) => {
 
 
 
+
 app.get('/produto/:id', async (req, res) => {
   try {
     const productId = req.params.id;
-
-    const productResult = await pool.query('SELECT * FROM products WHERE id = $1', [productId]);
+    // Modifique para a tabela 'produtos'
+    const productResult = await pool.query('SELECT * FROM produtos WHERE id = $1', [productId]);
 
     if (productResult.rows.length === 0) {
       return res.status(404).send('Produto não encontrado');
@@ -193,6 +192,8 @@ app.get('/produto/:id', async (req, res) => {
   }
 });
 
+
+
 // Rota para exibir os detalhes do produto
 // Rota para exibir os detalhes do produto
 app.get('/produtoView/:id', async (req, res) => {
@@ -200,7 +201,7 @@ app.get('/produtoView/:id', async (req, res) => {
     const productId = req.params.id; // Obter o ID do produto da URL.
 
     // Consulta ao banco para buscar o produto com o ID correto.
-    const result = await pool.query('SELECT * FROM products WHERE id = $1', [productId]);
+    const result = await pool.query('SELECT * FROM items WHERE id = $1', [productId]);
 
     if (result.rows.length === 0) {
       return res.status(404).send('Produto não encontrado.');
@@ -221,25 +222,21 @@ app.get('/produtoView/:id', async (req, res) => {
 
 
 // Rota para o painel administrativo
-// Rota para o painel administrativo
 app.get('/admin', async (req, res) => {
   if (!req.session.user || req.session.user.role !== 'admin') {
     return res.status(403).send('Acesso negado! Você não tem permissão para acessar o painel administrativo.');
   }
 
   try {
-    // Consulta os produtos no banco de dados
-    const result = await pool.query('SELECT * FROM products');
-    const products = result.rows;
-
-    // Passa os produtos para a view
-    res.render('admin', { produtos: products });
+    // Consulta os produtos da tabela 'produtos'
+    const result = await pool.query('SELECT * FROM produtos');
+    const produtos = result.rows;
+    res.render('admin', { produtos: produtos });
   } catch (error) {
     console.error('Erro ao carregar produtos:', error);
     res.status(500).send('Erro ao carregar produtos');
   }
 });
-
 
 // Rota para exibir a página de login do admin
 app.get('/admin/login', (req, res) => {
@@ -281,7 +278,8 @@ app.post('/admin/login', async (req, res) => {
 ;
 
 
-app.post('/admin/products', async (req, res) => {
+// Rota para adicionar itens no painel administrativo
+app.post('/admin/items', async (req, res) => {
   const user = req.session.user;
 
   if (!user || user.role !== 'admin') {
@@ -289,16 +287,12 @@ app.post('/admin/products', async (req, res) => {
   }
 
   try {
-    const { productName, productPrice, productDescription, productImage } = req.body;
-
-    const query = `
-      INSERT INTO products (name, price, description, image_url)
-      VALUES ($1, $2, $3, $4)
-    `;
-    const values = [productName, productPrice, productDescription, productImage];
+    const { itemName, itemPrice, itemDescription, itemImage } = req.body;
+    // Altere para a tabela 'produtos'
+    const query = `INSERT INTO produtos (name, price, description, image_url) VALUES ($1, $2, $3, $4)`;
+    const values = [itemName, itemPrice, itemDescription, itemImage];
 
     await pool.query(query, values);
-
     res.status(201).send('Produto adicionado com sucesso!');
   } catch (error) {
     console.error('Erro ao adicionar produto:', error);
